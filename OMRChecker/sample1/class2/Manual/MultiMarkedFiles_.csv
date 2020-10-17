@@ -1,0 +1,6 @@
+"file_id","input_path","output_path","score","Roll","q1","q2","q3","q4","q5","q6","q7","q9","q10","q11","q11","q12","q13","q14","q15","q16","q17"
+"sheet2.jpg","inputs/sample1/class2/sheet2.jpg","./sample1/class2/Manual/MultiMarkedFiles/sheet2.jpg","NA","","A","","","","","","","","C","","","","","","","A","A"
+"sheet4.jpg","inputs/sample1/class2/sheet4.jpg","./sample1/class2/Manual/MultiMarkedFiles/sheet4.jpg","NA","","AB","BC","B","B","","","","","B","B","B","BD","BD","BC","B","BD","B"
+"image4.jpg","inputs/sample1/class2/image4.jpg","./sample1/class2/Manual/MultiMarkedFiles/image4.jpg","NA","","A","C","B","B","","","","","C","B","B","D","D","C","B","AD","A"
+"image4.jpg","inputs/sample1/class2/image4.jpg","./sample1/class2/Manual/MultiMarkedFiles/image4.jpg","NA","","A","C","B","B","","","","","C","B","B","D","D","C","B","AD","A"
+"image4.jpg","inputs/sample1/class2/image4.jpg","./sample1/class2/Manual/MultiMarkedFiles/image4.jpg","NA","","A","C","B","B","","","","","C","B","B","D","D","C","B","AD","A"

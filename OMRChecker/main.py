@@ -50,6 +50,7 @@ def process_dir(root_dir, subdir, template):
     # Exclude marker image if exists
     if(template and template.marker_path):
         omr_files = [f for f in omr_files if f != template.marker_path]
+        print("\n\n\nMarker Found\n\n\n")
 
     subfolders = sorted([file for file in os.listdir(
         curr_dir) if os.path.isdir(os.path.join(curr_dir, file))])
@@ -346,6 +347,7 @@ def process_files(omr_files, template, args, out):
         if(args["setLayout"]):
             templateLayout = utils.drawTemplateLayout(
                 OMRCrop, template, shifted=False, border=2)
+            # Comment by Sohaib
             utils.show("Template Layout", templateLayout, 1, 1)
             continue
 
