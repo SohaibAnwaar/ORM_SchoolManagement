@@ -93,41 +93,42 @@ def resize_util_h(img, u_height, u_width=None):
 
 
 def show(name, orig, pause=1, resize=False, resetpos=None):
-    global windowX, windowY
-    if(type(orig) == type(None)):
-        print(name, " NoneType image to show!")
-        if(pause):
-            cv2.destroyAllWindows()
-        return
-    origDim = orig.shape[:2]
-    img = resize_util(orig, config.display_width, config.display_height) if resize else orig
-    cv2.imshow(name, img)
-    if(resetpos):
-        windowX = resetpos[0]
-        windowY = resetpos[1]
-    cv2.moveWindow(name, windowX, windowY)
+    print("Showing")
+    # global windowX, windowY
+    # if(type(orig) == type(None)):
+    #     print(name, " NoneType image to show!")
+    #     if(pause):
+    #         cv2.destroyAllWindows()
+    #     return
+    # origDim = orig.shape[:2]
+    # img = resize_util(orig, config.display_width, config.display_height) if resize else orig
+    # cv2.imshow(name, img)
+    # if(resetpos):
+    #     windowX = resetpos[0]
+    #     windowY = resetpos[1]
+    # cv2.moveWindow(name, windowX, windowY)
 
-    h, w = img.shape[:2]
+    # h, w = img.shape[:2]
 
-    # Set next window position
-    margin = 25
-    w += margin
-    h += margin
-    if(windowX + w > config.windowWidth):
-        windowX = 0
-        if(windowY + h > config.windowHeight):
-            windowY = 0
-        else:
-            windowY += h
-    else:
-        windowX += w
+    # # Set next window position
+    # margin = 25
+    # w += margin
+    # h += margin
+    # if(windowX + w > config.windowWidth):
+    #     windowX = 0
+    #     if(windowY + h > config.windowHeight):
+    #         windowY = 0
+    #     else:
+    #         windowY += h
+    # else:
+    #     windowX += w
 
-    if(pause):
-        print(
-            "Showing '" +
-            name +
-            "'\n\tPress Q on image to continue Press Ctrl + C in terminal to exit")
-        waitQ()
+    # if(pause):
+    #     print(
+    #         "Showing '" +
+    #         name +
+    #         "'\n\tPress Q on image to continue Press Ctrl + C in terminal to exit")
+    #     waitQ()
 
 
 def putLabel(img, label, size):

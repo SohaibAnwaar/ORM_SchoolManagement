@@ -14,7 +14,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import imutils
-
+import json
 import config
 import utils
 from template import Template
@@ -75,15 +75,16 @@ def process_dir(root_dir, subdir, template):
 
         utils.setup_dirs(paths)
         output_set = setup_output(paths, template)
-        process_files(omr_files, template, args_local, output_set)
+        return process_files(omr_files, template, args_local, output_set)
     elif(len(subfolders) == 0):
         # the directory should have images or be non-leaf
         print(f'Note: No valid images or subfolders found in {curr_dir}')
 
     # recursively process subfolders
+    results_lists = []
     for folder in subfolders:
-        process_dir(root_dir, os.path.join(subdir, folder), template)
-
+       results_lists.append(process_dir(root_dir, os.path.join(subdir, folder), template))
+    return results_lists
 
 def checkAndMove(error_code, filepath, filepath2):
     # print("Dummy Move:  "+filepath, " --> ",filepath2)
@@ -278,7 +279,7 @@ def preliminary_check():
     pass
     # filesCounter=0
     # mws, mbs = [],[]
-    # # PRELIM_CHECKS for thresholding
+    # # PRELIM_fCHECKS for thresholding
     # if(config.PRELIM_CHECKS):
     #     # TODO: add more using unit testing
     #     TEMPLATE = TEMPLATES["H"]
@@ -299,6 +300,7 @@ def process_files(omr_files, template, args, out):
     start_time = int(time())
     filesCounter = 0
     filesNotMoved = 0
+    response_list = []
 
     for filepath in omr_files:
         filesCounter += 1
@@ -314,7 +316,8 @@ def process_files(omr_files, template, args, out):
             print("Error: Filepath not matching to Regex: " + filepath)
             continue
         # set global var for reading
-
+        print("I am reading Image from here")
+        print(filepath)
         inOMR = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
         print(
             '\n[%d] Processing image: \t' %
@@ -361,6 +364,9 @@ def process_files(omr_files, template, args, out):
         # concatenate roll nos, set unmarked responses, etc
         resp = processOMR(template, OMRresponseDict)
         print("\nRead Response: \t", resp)
+        response_list.append(resp)
+
+        
 
         #This evaluates and returns the score attribute
         # TODO: Automatic scoring
@@ -455,7 +461,7 @@ def process_files(omr_files, template, args, out):
             else:
                 print(x)
 
-
+    return response_list
 # Evaluate accuracy based on OMRDataset file generated through moderation
 # portal on the same set of images
 def evaluate_correctness(template, out):
@@ -498,6 +504,12 @@ def evaluate_correctness(template, out):
                   list(x_df.index.difference(intersection)))
 
 
+
+
+
+from flask import Flask
+
+app = Flask(__name__)
 timeNowHrs = strftime("%I%p", localtime())
 
 # construct the argument parse and parse the arguments
@@ -527,9 +539,9 @@ argparser.add_argument(
     action='store_true',
     help="Set up OMR template layout - modify your json file and run again until the template is set.")
 argparser.add_argument("-i", "--inputDir", required=False, action='append',
-                       dest='input_dir', help="Specify an input directory.")
+                    dest='input_dir', help="Specify an input directory.")
 argparser.add_argument("-o", "--outputDir", default='outputs', required=False,
-                       dest='output_dir', help="Specify an output directory.")
+                    dest='output_dir', help="Specify an output directory.")
 argparser.add_argument(
     "-t",
     "--template",
@@ -540,16 +552,23 @@ argparser.add_argument(
 
 args, unknown = argparser.parse_known_args()
 args = vars(args)
-if(len(unknown) > 0):
-    print("\nError: Unknown arguments:", unknown)
-    argparser.print_help()
-    exit(11)
 
-if args['template']:
-    args['template'] = Template(args['template'])
+@app.route('/')
+def index():
 
-if args['input_dir'] is None:
-    args['input_dir'] = ['inputs']
+    if(len(unknown) > 0):
+        print("\nError: Unknown arguments:", unknown)
+        argparser.print_help()
+        # exit(11)
 
-for root in args['input_dir']:
-    process_dir(root, '', args['template'])
+    if args['template']:
+        args['template'] = Template(args['template'])
+
+    if args['input_dir'] is None:
+        args['input_dir'] = ['inputs']
+
+    for root in args['input_dir']:
+        return json.dumps(process_dir(root, '', args['template']))
+
+if __name__ == '__main__':
+    app.run(debug=True)
